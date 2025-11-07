@@ -13,21 +13,78 @@
 
         body {
             font-family: 'New Times Roman', sans-serif;
-            background: linear-gradient(135deg, #127500 0%, #127500 100%);
+            background: linear-gradient(135deg, #036E03 50%, #127500 50%);
+            background-size: 400% 400%;
+            animation: gradientShift 3s ease infinite;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            transition: background 0.5s ease;
+        }
+
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a2e 50%, #16213e 50%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .container {
             background: white;
             border-radius: 15px;
             padding: 50px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-            max-width: 500px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            max-width: 450px;
             width: 100%;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .dark-mode .container {
+            background: #2d2d44;
+            color: #e0e0e0;
+        }
+
+        .controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 999;
+        }
+
+        .icon-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            cursor: pointer;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode .icon-btn {
+            background: #2d2d44;
+        }
+
+        .icon-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .icon-btn:active {
+            transform: scale(0.95);
         }
 
         h1 {
@@ -35,6 +92,11 @@
             color: #1e3c72;
             margin-bottom: 20px;
             font-size: 2em;
+            transition: color 0.3s ease;
+        }
+
+        .dark-mode h1 {
+            color: #6fa8dc;
         }
 
         .screen {
@@ -43,27 +105,46 @@
 
         .screen.active {
             display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             color: #333;
             font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .dark-mode label {
+            color: #b0b0b0;
         }
 
         input[type="text"] {
             width: 100%;
-            padding: 12px;
+            padding: 15px;
             border: 2px solid #ddd;
             border-radius: 8px;
-            font-size: 16px;
+            font-size: 20px;
             margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode input[type="text"] {
+            background: #1a1a2e;
+            border-color: #4a4a5e;
+            color: #e0e0e0;
         }
 
         input[type="text"]:focus {
             outline: none;
             border-color: #1e3c72;
+            transform: scale(1.02);
         }
 
         .btn {
@@ -77,14 +158,22 @@
             font-weight: bold;
             cursor: pointer;
             margin-top: 10px;
+            transition: all 0.3s ease;
         }
 
         .btn:hover {
             background: #2a5298;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:active {
+            transform: translateY(0);
         }
 
         .btn-secondary {
             background: #6c757d;
+            margin-top: 5px;
         }
 
         .btn-secondary:hover {
@@ -107,11 +196,44 @@
             background: #f8f9fa;
             border-radius: 8px;
             margin-bottom: 10px;
+            animation: slideIn 0.3s ease;
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode .player-item {
+            background: #1a1a2e;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .player-item.removing {
+            animation: slideOut 0.3s ease;
+        }
+
+        @keyframes slideOut {
+            to {
+                opacity: 0;
+                transform: translateX(20px);
+            }
         }
 
         .player-item span {
             font-size: 16px;
             color: #333;
+            transition: color 0.3s ease;
+        }
+
+        .dark-mode .player-item span {
+            color: #e0e0e0;
         }
 
         .btn-remove {
@@ -122,10 +244,12 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 14px;
+            transition: all 0.3s ease;
         }
 
         .btn-remove:hover {
             background: #c82333;
+            transform: scale(1.05);
         }
 
         .player-list {
@@ -147,18 +271,59 @@
             cursor: pointer;
             transition: all 0.3s;
             border: 3px solid transparent;
+            position: relative;
+            perspective: 1000px;
         }
 
-        .player-card:hover {
+        .dark-mode .player-card {
+            background: #1a1a2e;
+        }
+
+        .player-card:hover:not(.revealed) {
             transform: translateY(-5px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             border-color: #1e3c72;
+        }
+
+        .player-card.revealed {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .player-card.revealed::after {
+            content: '✓';
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            color: #28a745;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .player-card-inner {
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .player-card.flipping .player-card-inner {
+            animation: flip 0.6s ease;
+        }
+
+        @keyframes flip {
+            0% { transform: rotateY(0); }
+            50% { transform: rotateY(90deg); }
+            100% { transform: rotateY(0); }
         }
 
         .player-card-name {
             font-size: 18px;
             font-weight: bold;
             color: #1e3c72;
+            transition: color 0.3s ease;
+        }
+
+        .dark-mode .player-card-name {
+            color: #6fa8dc;
         }
 
         .reveal-overlay {
@@ -176,6 +341,7 @@
 
         .reveal-overlay.active {
             display: flex;
+            animation: fadeIn 0.3s ease;
         }
 
         .reveal-content {
@@ -185,6 +351,24 @@
             text-align: center;
             max-width: 400px;
             width: 90%;
+            animation: popIn 0.5s ease;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .dark-mode .reveal-content {
+            background: #2d2d44;
+            color: #e0e0e0;
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
 
         .reveal-role {
@@ -211,6 +395,12 @@
             margin-bottom: 20px;
             color: #004085;
             text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode .info-box {
+            background: #1a3a52;
+            color: #6fa8dc;
         }
 
         .warning-box {
@@ -220,6 +410,27 @@
             margin-bottom: 20px;
             color: #856404;
             text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode .warning-box {
+            background: #4a3800;
+            color: #ffd966;
+        }
+
+        .status-box {
+            background: #d4edda;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode .status-box {
+            background: #1a4d2e;
+            color: #6fa86f;
         }
 
         .number-input {
@@ -238,10 +449,12 @@
             border-radius: 5px;
             font-size: 20px;
             cursor: pointer;
+            transition: all 0.3s ease;
         }
 
         .number-input button:hover {
             background: #2a5298;
+            transform: scale(1.1);
         }
 
         .number-input span {
@@ -253,12 +466,17 @@
     </style>
 </head>
 <body>
+    <div class="controls">
+        <button class="icon-btn" id="darkModeBtn" onclick="toggleDarkMode()" title="Modo oscuro">🌙</button>
+        <button class="icon-btn" id="soundBtn" onclick="toggleSound()" title="Sonidos">🔊</button>
+    </div>
+
     <div class="container">
-        <h1> El Impostor pero de 1ro Infor</h1>
+        <h1>El Impostor version 1ro Infor</h1>
 
         <div class="screen active" id="setupScreen">
             <div class="info-box">
-                Ingresa los nombres de los jugadores
+                Ingresa el nombre de quienes van a jugar 
             </div>
 
             <input type="text" id="playerNameInput" placeholder="Nombre del jugador">
@@ -281,12 +499,17 @@
         </div>
 
         <div class="screen" id="gameScreen">
+            <div class="status-box" id="statusBox">
+                Jugadores que han visto su rol: <span id="revealedCount">0</span>/<span id="totalCount">0</span>
+            </div>
+
             <div class="warning-box">
-                Cada jugador debe tocar su nombre para ver su rol
+                 Cada jugador solo puede ver su rol UNA vez
             </div>
 
             <div class="player-grid" id="playerGrid"></div>
 
+            <button class="btn" onclick="newRound()"> Nueva Ronda (mismos jugadores)</button>
             <button class="btn btn-secondary" onclick="resetGame()">Nueva Partida</button>
         </div>
     </div>
@@ -300,42 +523,78 @@
     </div>
 
     <script>
-
         const PALABRAS_CLAVE = [
-            "Rosa",
-            "Martina",
-            "Agustin",
-            "Paz",
-            "Lucas",
-            "Ivan",
-            "Martin",
-            "Rafa",
-            "Santi",
-			"Carlos",
-            "Guada",
-            "Yilian",
-            "Moura",
-            "Axel",
-            "Fernandez",
-            "Diego",
-            "Ian",
-            "Sebas",
-			"Aida",
-            "Vivian",
-            "Francisco",
-            "Lexy",
-            "Bimba",
-            "Milca",
-            "Ariel",
-            "Rocio",
-            "Aracely",
-            "Mahlio"
+            "Rosa", "Martina", "Agustin", "Paz", "Lucas", "Ivan", "Martin", "Rafa", "Santi",
+            "Carlos", "Guada", "Yilian", "Moura", "Axel", "Fernandez", "Diego", "Ian", "Sebas",
+            "Aida", "Vivian", "Francisco", "Lexy", "Bimba", "Milca", "Ariel", "Rocio", "Aracely", "Mahlio"
         ];
 
         let players = [];
         let impostorCount = 1;
         let gameData = [];
         let selectedWord = "";
+        let soundEnabled = true;
+        let darkMode = false;
+        let revealedPlayers = new Set();
+        let usedWords = [];
+
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type) {
+            if (!soundEnabled) return;
+
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            switch(type) {
+                case 'add':
+                    oscillator.frequency.value = 523.25; 
+                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.1);
+                    break;
+                case 'remove':
+                    oscillator.frequency.value = 392.00; 
+                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.15);
+                    break;
+                case 'start':
+                    oscillator.frequency.value = 659.25;
+                    gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.3);
+                    break;
+                case 'reveal':
+                    oscillator.frequency.value = 783.99; 
+                    gainNode.gain.setValueAtTime(0.12, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.2);
+                    break;
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const btn = document.getElementById('soundBtn');
+            btn.textContent = soundEnabled ? '🔊' : '🔇';
+            playSound('add');
+        }
+
+        function toggleDarkMode() {
+            darkMode = !darkMode;
+            document.body.classList.toggle('dark-mode');
+            const btn = document.getElementById('darkModeBtn');
+            btn.textContent = darkMode ? '☀️' : '🌙';
+            playSound('add');
+        }
 
         function addPlayer() {
             const input = document.getElementById('playerNameInput');
@@ -353,6 +612,7 @@
 
             players.push(name);
             input.value = '';
+            playSound('add');
             updatePlayerList();
         }
 
@@ -373,14 +633,22 @@
             const warning = document.getElementById('minPlayersWarning');
             warning.style.display = players.length < 3 ? 'block' : 'none';
         }
+
         function removePlayer(index) {
-            players.splice(index, 1);
-            updatePlayerList();
+            const item = document.querySelectorAll('.player-item')[index];
+            item.classList.add('removing');
+            
+            setTimeout(() => {
+                players.splice(index, 1);
+                playSound('remove');
+                updatePlayerList();
+            }, 300);
         }
 
         function changeImpostorCount(delta) {
             impostorCount = Math.max(1, Math.min(players.length - 1, impostorCount + delta));
             document.getElementById('impostorCount').textContent = impostorCount;
+            playSound('add');
         }
 
         function startGame() {
@@ -394,7 +662,13 @@
                 return;
             }
 
-            selectedWord = PALABRAS_CLAVE[Math.floor(Math.random() * PALABRAS_CLAVE.length)];
+            if (usedWords.length >= PALABRAS_CLAVE.length) {
+                usedWords = [];
+            }
+
+            let availableWords = PALABRAS_CLAVE.filter(word => !usedWords.includes(word));
+            selectedWord = availableWords[Math.floor(Math.random() * availableWords.length)];
+            usedWords.push(selectedWord);
 
             const shuffledPlayers = [...players].sort(() => Math.random() - 0.5);
             gameData = shuffledPlayers.map((name, index) => ({
@@ -402,8 +676,34 @@
                 isImpostor: index < impostorCount
             }));
 
+            revealedPlayers.clear();
+            playSound('start');
             showScreen('gameScreen');
             renderPlayerCards();
+            updateRevealCounter();
+        }
+
+        function newRound() {
+            if (confirm('¿Iniciar nueva ronda con los mismos jugadores?')) {
+                if (usedWords.length >= PALABRAS_CLAVE.length) {
+                    usedWords = [];
+                }
+
+                let availableWords = PALABRAS_CLAVE.filter(word => !usedWords.includes(word));
+                selectedWord = availableWords[Math.floor(Math.random() * availableWords.length)];
+                usedWords.push(selectedWord);
+
+                const shuffledPlayers = [...players].sort(() => Math.random() - 0.5);
+                gameData = shuffledPlayers.map((name, index) => ({
+                    name: name,
+                    isImpostor: index < impostorCount
+                }));
+
+                revealedPlayers.clear();
+                playSound('start');
+                renderPlayerCards();
+                updateRevealCounter();
+            }
         }
 
         function renderPlayerCards() {
@@ -413,31 +713,56 @@
             gameData.forEach((player, index) => {
                 const card = document.createElement('div');
                 card.className = 'player-card';
-                card.innerHTML = `<div class="player-card-name">${player.name}</div>`;
-                card.onclick = () => revealRole(index);
+                card.innerHTML = `
+                    <div class="player-card-inner">
+                        <div class="player-card-name">${player.name}</div>
+                    </div>
+                `;
+                card.onclick = () => revealRole(index, card);
                 grid.appendChild(card);
             });
+
+            document.getElementById('totalCount').textContent = gameData.length;
         }
 
-        function revealRole(index) {
-            const player = gameData[index];
-            const overlay = document.getElementById('revealOverlay');
-            const roleElement = document.getElementById('revealRole');
-            const wordElement = document.getElementById('revealWord');
+        function updateRevealCounter() {
+            document.getElementById('revealedCount').textContent = revealedPlayers.size;
+        }
 
-            if (player.isImpostor) {
-                roleElement.textContent = '🔪';
-                roleElement.className = 'reveal-role impostor-text';
-                wordElement.textContent = 'ERES EL IMPOSTOR';
-                wordElement.className = 'reveal-word impostor-text';
-            } else {
-                roleElement.textContent = '✅';
-                roleElement.className = 'reveal-role';
-                wordElement.textContent = selectedWord;
-                wordElement.className = 'reveal-word';
+        function revealRole(index, cardElement) {
+            if (revealedPlayers.has(index)) {
+                alert(' Este jugador ya vio su rol. No puede verlo de nuevo.');
+                return;
             }
 
-            overlay.classList.add('active');
+            const player = gameData[index];
+            
+            cardElement.classList.add('flipping');
+            playSound('reveal');
+
+            setTimeout(() => {
+                const overlay = document.getElementById('revealOverlay');
+                const roleElement = document.getElementById('revealRole');
+                const wordElement = document.getElementById('revealWord');
+
+                if (player.isImpostor) {
+                    roleElement.textContent = '🔪 IMPOSTOR';
+                    roleElement.className = 'reveal-role impostor-text';
+                    wordElement.textContent = 'ERES EL IMPOSTOR';
+                    wordElement.className = 'reveal-word impostor-text';
+                } else {
+                    roleElement.textContent = '✅ INOCENTE';
+                    roleElement.className = 'reveal-role';
+                    wordElement.textContent = selectedWord;
+                    wordElement.className = 'reveal-word';
+                }
+
+                overlay.classList.add('active');
+
+                revealedPlayers.add(index);
+                cardElement.classList.add('revealed');
+                updateRevealCounter();
+            }, 300);
         }
 
         function hideReveal() {
@@ -449,9 +774,11 @@
                 players = [];
                 gameData = [];
                 impostorCount = 1;
+                revealedPlayers.clear();
                 document.getElementById('impostorCount').textContent = '1';
                 showScreen('setupScreen');
                 updatePlayerList();
+                playSound('start');
             }
         }
 
